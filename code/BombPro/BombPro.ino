@@ -28,16 +28,16 @@ char keys[ROWS][COLS] = {
 };
 
 byte rowPins[ROWS] = {  // connect to the row pinouts of the keypad
-  A6,
-  A5,
-  A4,
-  A2,
+  A8,
+  A9,
+  A10,
+  A11,
 };
 byte colPins[COLS] = { // connect to the column pinouts of the keypad
-  A1,
-  A0,
-  A3,
-  A7,
+  A12,
+  A13,
+  A14,
+  A15,
 };
 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
@@ -92,7 +92,7 @@ boolean defusing;
 boolean cancelando;
 // SOUND TONES
 boolean soundEnable = true;
-uint8_t tonepin = 8; // Pin 13 for the sound
+uint8_t tonepin = 9; // Pin 13 for the sound
 int alarmTone1 = 700;
 int alarmTone2 = 2600; // http://www.mainstreamds.com/wp-content/uploads/2014/08/bomb2.0_esquema.png
 int activeTone = 1330;

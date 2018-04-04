@@ -1,6 +1,6 @@
-#define  SER_OUT 52
-#define  SRCK 53
-#define  RCK  51
+#define  SER_OUT 26
+#define  SRCK 30
+#define  RCK  28
 
 unsigned char ledValues[2];  // number of shift registers
 // tpic0 is red
