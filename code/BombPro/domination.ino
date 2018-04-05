@@ -11,11 +11,11 @@ void domination(){
   iZoneTime=0;
   aTime=0;
   redTime=0;
-  greenTime=0;
+  blueTime=0;
   endGame = false;
 
   int largoTono = 50;
-  // 0 = neutral, 1 = green team, 2 = red team
+  // 0 = neutral, 1 = blue team, 2 = red team
   a=millis();
   //Starting Game Code
   while(1)  // this is the important code, is a little messy but works good.
@@ -30,12 +30,12 @@ void domination(){
     timeCalcVar=(millis()- iTime)%1000;
     if(timeCalcVar >= 0 && timeCalcVar <= 40)
     {
-      if(team==1)digitalWrite(GREENLED, HIGH);  
-      if(team==2)digitalWrite(REDLED, HIGH);  
+      if(team==1)digitalWrite(BLUELED, HIGH);
+      if(team==2)digitalWrite(REDLED, HIGH);
     }
     if(timeCalcVar >= 50 && timeCalcVar <= 100)
     {    
-      if(team==1)digitalWrite(GREENLED, LOW);  
+      if(team==1)digitalWrite(BLUELED, LOW);
       if(team==2)digitalWrite(REDLED, LOW);
     }
     // Sound!!! same as Destroy 
@@ -123,7 +123,7 @@ void domination(){
           delay(1000);
 
           if(team==1){ 
-            greenTime+=millis()-iZoneTime;
+            blueTime+=millis()-iZoneTime;
             iZoneTime=0; 
 
           }
@@ -171,7 +171,7 @@ void domination(){
         drawBar(percent);
 
         if(percent >= 100) {
-          digitalWrite(GREENLED, LOW);
+          digitalWrite(BLUELED, LOW);
           team=2;
           iZoneTime=millis();
           delay(1000);
@@ -200,13 +200,13 @@ void domination(){
 
         if( timeCalcVar >= 0 && timeCalcVar <= 20)
         {
-          digitalWrite(GREENLED, HIGH);  
+          digitalWrite(BLUELED, HIGH);
           if(soundEnable)tone(tonepin,alarmTone1,200);
         }
         if(timeCalcVar >= 480 && timeCalcVar <= 500)
         {
           if(soundEnable)tone(tonepin,alarmTone2,200);
-          digitalWrite(GREENLED, LOW);
+          digitalWrite(BLUELED, LOW);
         }
 
         unsigned long seconds= millis() - xTime;
@@ -215,7 +215,7 @@ void domination(){
 
         if(percent >= 100)
         {
-          digitalWrite(GREENLED, LOW);
+          digitalWrite(BLUELED, LOW);
           team=1;
           iZoneTime=millis();
           delay(1000);
@@ -223,16 +223,16 @@ void domination(){
         }
       }
       cls();
-      digitalWrite(GREENLED, LOW);  
+      digitalWrite(BLUELED, LOW);
     }
   }
 }
 
 void gameOver(){
 
-  if(team==1)greenTime+=millis()-iZoneTime;
+  if(team==1)blueTime+=millis()-iZoneTime;
   if(team==2)redTime+=millis()-iZoneTime;
-  digitalWrite(GREENLED, LOW);
+  digitalWrite(BLUELED, LOW);
   digitalWrite(REDLED, LOW);
   while(!defusing){
     keypad.getKey();
@@ -250,10 +250,10 @@ void gameOver(){
     lcd.setCursor(0, 1);
 
     //check who team win the base
-    if (greenTime > redTime ) {
-      // greenteam wins
+    if (blueTime > redTime ) {
+      // blueteam wins
       lcd.print(F("   BLUE TEAM WINS"));
-      digitalWrite(GREENLED, HIGH);
+      digitalWrite(BLUELED, HIGH);
     } else {
       // redteam wins 
       lcd.print(F("   RED TEAM WINS"));
@@ -277,7 +277,7 @@ void gameOver(){
     cls();
     lcd.print(F("     Blue Time:"));
     lcd.setCursor(7, 2);
-    printTimeDom(greenTime,false);
+    printTimeDom(blueTime,false);
     delay(3000);
     keypad.getKey();
     if(defusing){

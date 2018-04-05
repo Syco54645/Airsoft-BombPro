@@ -33,7 +33,22 @@ void setupTPIC (void) {
   LED_OFF // turn off all leds at start in case we trigger a reboot.
 }
 
+void zeroAnimations () {
+  animatingRed = false;
+  animatingBlue = false;
+  currentRedLed = -10;
+  currentBlueLed = -10;
+  LED_OFF
+}
 void ledAnimations (uint8_t style) {
+  if (animatingRed == true) {
+    Serial.println("Attempting to animate");
+    Serial.print("red");
+    Serial.println(animatingRed);
+    Serial.print("style");
+    Serial.println(style);
+  }
+
   if (animatingRed == true) {
     animateRed(style);
   }
@@ -50,6 +65,8 @@ void animateRed (uint8_t style) {
    * 3 - high to low grow
    */
    if (millis() >= (startAnimateRed + 20)) {
+    Serial.print("here");
+    Serial.println(currentRedLed);
     startAnimateRed = millis();
     bool grow;
     if (style == 0 || style == 1) {

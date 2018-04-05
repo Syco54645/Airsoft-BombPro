@@ -64,6 +64,7 @@ char BT_DEFUSER = 'x';   // not implemented
 
 const uint8_t REDLED = 22;
 const uint8_t GREENLED = 23;
+const uint8_t BLUELED = 23;
 //const int BLUELED = 12;
 
 // led animation variables
@@ -102,7 +103,8 @@ uint8_t errorTone = 100;
 unsigned long iTime;
 unsigned long timeCalcVar;
 unsigned long redTime;
-unsigned long greenTime;
+unsigned long blueTime;
+
 unsigned long iZoneTime;//initial time for zone
 byte team=0; // 0 = neutral, 1 = blue team, 2 = red team
 const byte TEAM_NEUTRAL = 0;
