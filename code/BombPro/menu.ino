@@ -30,8 +30,8 @@ void menuPrincipal(){   //MAIN MENU
       delay(50);
     }
     if(var == BT_DOWN && i<2){
-      animatingRed = true;
-      animationStyle = 1;
+      animatingBlue = true;
+      animationStyle = 0;
       tone(tonepin,2400,30);
       i++;
       cls(); 

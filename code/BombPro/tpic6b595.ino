@@ -1,7 +1,10 @@
 
 char currentRedLed = -10; // the current red led that is lit in the animation
+char currentBlueLed = -10; // the current blue led that is lit in the animation
 long startAnimateRed;   // the last time that it was fired
-const uint8_t RED_LED_MAX = 7;
+long startAnimateBlue;   // the last time that it was fired
+const uint8_t RED_LED_MAX = 5;
+const uint8_t BLUE_LED_MAX = 5;
 uint8_t chaseDirection;
 
 void TPIC6B959N_write (void) {
@@ -34,6 +37,9 @@ void ledAnimations (uint8_t style) {
   if (animatingRed == true) {
     animateRed(style);
   }
+  if (animatingBlue == true) {
+    animateBlue(style);
+  }
 }
 
 void animateRed (uint8_t style) {
@@ -63,7 +69,29 @@ void animateRed (uint8_t style) {
 }
 
 void animateBlue (uint8_t style) {
-  
+    /*
+   * 0 - low to high chase
+   * 1 - high to low chase
+   * 2 - low to high grow
+   * 3 - high to low grow
+   */
+   if (millis() >= (startAnimateBlue + 20)) {
+    startAnimateBlue = millis();
+    bool grow;
+    if (style == 0 || style == 1) {
+      grow = false;
+    } else {
+      grow = true;
+    }
+    if (currentBlueLed == -10 && (style == 0 || style == 2)) {
+      currentBlueLed = 0;
+      chaseDirection = 0;
+    } else if (currentBlueLed == -10 && (style == 1 || style == 3)) {
+      currentBlueLed = 7;
+      chaseDirection = 1;
+    }
+    blueChase(&currentBlueLed, chaseDirection, grow);
+   }
 }
 
 void redChase (char *currentLED, uint8_t chaseDirection, bool grow) {
@@ -137,24 +165,6 @@ void redChase (char *currentLED, uint8_t chaseDirection, bool grow) {
       }
       break;
     case 6:
-      RED_LED6_ON;
-      if (grow == false) {
-        if (chaseDirection == 0){
-          RED_LED5_OFF;
-        } else {
-          RED_LED7_OFF;
-        }
-      }
-      break;
-    case 7:
-      RED_LED7_ON;
-      if (grow == false) {
-        if (chaseDirection == 0){
-          RED_LED6_OFF;
-        }
-      }
-      break;
-    case 8:
       animatingRed = false;
       RED_LED_OFF
       *currentLED = -10;
@@ -166,6 +176,89 @@ void redChase (char *currentLED, uint8_t chaseDirection, bool grow) {
   } else {
     *currentLED -= 1;
   }
-  
+}
+
+void blueChase (char *currentLED, uint8_t chaseDirection, bool grow) {
+  /*
+   * chaseDirection 0 - asc
+   *           1 - desc
+   */
+  switch (*currentLED) {
+    case -1:
+      animatingBlue = false;
+      BLUE_LED_OFF
+      *currentLED = -10;
+      return;
+      break;
+    case 0:
+      BLUE_LED0_ON;
+      if (grow == false) {
+        if (chaseDirection == 0){
+          BLUE_LED1_OFF;
+        }
+      }
+      break;
+    case 1:
+      BLUE_LED1_ON;
+      if (grow == false) {
+        if (chaseDirection == 0){
+          BLUE_LED0_OFF;
+        } else {
+          BLUE_LED2_OFF;
+        }
+      }
+      break;
+    case 2:
+      BLUE_LED2_ON;
+      if (grow == false) {
+        if (chaseDirection == 0){
+          BLUE_LED1_OFF;
+        } else {
+          BLUE_LED3_OFF;
+        }
+      }
+      break;
+    case 3:
+      BLUE_LED3_ON;
+      if (grow == false) {
+        if (chaseDirection == 0){
+          BLUE_LED2_OFF;
+        } else {
+          BLUE_LED4_OFF;
+        }
+      }
+      break;
+    case 4:
+      BLUE_LED4_ON;
+      if (grow == false) {
+        if (chaseDirection == 0){
+          BLUE_LED3_OFF;
+        } else {
+          BLUE_LED5_OFF;
+        }
+      }
+      break;
+    case 5:
+      BLUE_LED5_ON;
+      if (grow == false) {
+        if (chaseDirection == 0){
+          BLUE_LED4_OFF;
+        } else {
+          BLUE_LED6_OFF;
+        }
+      }
+      break;
+    case 6:
+      animatingBlue = false;
+      BLUE_LED_OFF
+      *currentLED = -10;
+      return;
+      break;
+  }
+  if (chaseDirection == 0) {
+    *currentLED += 1;
+  } else {
+    *currentLED -= 1;
+  }
 }
 

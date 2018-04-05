@@ -68,6 +68,7 @@ const uint8_t GREENLED = 23;
 
 // led animation variables
 bool animatingRed = false;
+bool animatingBlue = false;
 uint8_t animationStyle = 1;
 
 //RELAYPIN
