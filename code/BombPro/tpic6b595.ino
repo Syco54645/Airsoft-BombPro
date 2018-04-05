@@ -69,7 +69,7 @@ void animateRed (uint8_t style) {
 }
 
 void animateBlue (uint8_t style) {
-    /*
+  /*
    * 0 - low to high chase
    * 1 - high to low chase
    * 2 - low to high grow
