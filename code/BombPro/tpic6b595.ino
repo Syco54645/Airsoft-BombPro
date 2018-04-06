@@ -42,14 +42,6 @@ void zeroAnimations () {
 }
 void ledAnimations (uint8_t style) {
   if (animatingRed == true) {
-    Serial.println("Attempting to animate");
-    Serial.print("red");
-    Serial.println(animatingRed);
-    Serial.print("style");
-    Serial.println(style);
-  }
-
-  if (animatingRed == true) {
     animateRed(style);
   }
   if (animatingBlue == true) {
@@ -65,8 +57,6 @@ void animateRed (uint8_t style) {
    * 3 - high to low grow
    */
    if (millis() >= (startAnimateRed + 20)) {
-    Serial.print("here");
-    Serial.println(currentRedLed);
     startAnimateRed = millis();
     bool grow;
     if (style == 0 || style == 1) {
@@ -78,7 +68,7 @@ void animateRed (uint8_t style) {
       currentRedLed = 0;
       chaseDirection = 0;
     } else if (currentRedLed == -10 && (style == 1 || style == 3)) {
-      currentRedLed = 7;
+      currentRedLed = RED_LED_MAX;
       chaseDirection = 1;
     }
     redChase(&currentRedLed, chaseDirection, grow);
@@ -104,7 +94,7 @@ void animateBlue (uint8_t style) {
       currentBlueLed = 0;
       chaseDirection = 0;
     } else if (currentBlueLed == -10 && (style == 1 || style == 3)) {
-      currentBlueLed = 7;
+      currentBlueLed = BLUE_LED_MAX;
       chaseDirection = 1;
     }
     blueChase(&currentBlueLed, chaseDirection, grow);
