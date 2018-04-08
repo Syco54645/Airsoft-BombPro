@@ -41,6 +41,9 @@ byte colPins[COLS] = { // connect to the column pinouts of the keypad
 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
+// setting to true will speed up the boot time splash screen
+bool testing = false;
+
 char codeInput[8];
 byte time[4];
 boolean refresh = true; // 1 refresh one time...

@@ -1,14 +1,18 @@
 void startupSplash () {
-  lcd.setCursor(6, 0);
+  uint8_t testingFactor = 1;
+  if (testing == true) {
+    testingFactor = 100;
+  }
+  lcd.setCursor(3, 0);
   tone(tonepin, 2400, 30);
-  lcd.print(F("ASC-SKG"));// you can add your team name or someting cool
-  delay(2000);
-  lcd.setCursor(3, 1);
-  lcd.print(F(" A.A.S.D V2.1"));// may as well increment the version
-  delay(2000);
+  lcd.print(F(" A.A.I.D V2.1"));// may as well increment the version
+  delay(2000 / testingFactor);
+  lcd.setCursor(4, 1);
+  lcd.print(F("Initializing"));
+  delay(1000 / testingFactor);
   lcd.setCursor(1, 3);
-  lcd.print(F("by Awesome People"));// you can add your team name or someting cool
-  delay(2000);
+  lcd.print(F("by Awesome People"));
+  delay(2000 / testingFactor);
 }
 void explodeSplash(){
   digitalWrite(REDLED, LOW);  
