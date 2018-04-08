@@ -51,3 +51,5 @@ unsigned char ledValues[2];  // number of shift registers
 #define RED_BUTTON_LED_OFF RED_LED7_OFF
 #define BLUE_BUTTON_LED_ON BLUE_LED7_ON
 #define BLUE_BUTTON_LED_OFF BLUE_LED7_OFF
+
+void ledAnimations (uint8_t style, uint8_t delay = 20);

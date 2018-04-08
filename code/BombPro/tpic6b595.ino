@@ -40,23 +40,23 @@ void zeroAnimations () {
   currentBlueLed = -10;
   LED_OFF
 }
-void ledAnimations (uint8_t style) {
+void ledAnimations (uint8_t style, uint8_t delay) {
   if (animatingRed == true) {
-    animateRed(style);
+    animateRed(style, delay);
   }
   if (animatingBlue == true) {
-    animateBlue(style);
+    animateBlue(style, delay);
   }
 }
 
-void animateRed (uint8_t style) {
+void animateRed (uint8_t style, uint8_t delay) {
   /*
    * 0 - low to high chase
    * 1 - high to low chase
    * 2 - low to high grow
    * 3 - high to low grow
    */
-   if (millis() >= (startAnimateRed + 20)) {
+   if (millis() >= (startAnimateRed + delay)) {
     startAnimateRed = millis();
     bool grow;
     if (style == 0 || style == 1) {
@@ -75,14 +75,14 @@ void animateRed (uint8_t style) {
    }
 }
 
-void animateBlue (uint8_t style) {
+void animateBlue (uint8_t style, uint8_t delay) {
   /*
    * 0 - low to high chase
    * 1 - high to low chase
    * 2 - low to high grow
    * 3 - high to low grow
    */
-   if (millis() >= (startAnimateBlue + 20)) {
+   if (millis() >= (startAnimateBlue + delay)) {
     startAnimateBlue = millis();
     bool grow;
     if (style == 0 || style == 1) {

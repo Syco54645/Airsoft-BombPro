@@ -21,7 +21,7 @@ void menuPrincipal(){   //MAIN MENU
     var = keypad.getKey();
     if(var == BT_UP && i>0){
       animatingRed = true;
-      animationStyle = 0;
+      animationStyle = 1;
       tone(tonepin,2400,30);
       i--;
       cls();

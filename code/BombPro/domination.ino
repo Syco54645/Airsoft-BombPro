@@ -171,6 +171,9 @@ void domination(){
       uint8_t percent = 0;
       unsigned long xTime = millis(); //start disabling time
       while (isRedButtonPressed()) {
+        animatingRed= true;
+        animationStyle = 2;
+        ledAnimations(animationStyle, 100);
         keypad.getKey();
         //check if game time runs out during the disabling
         aTime = millis()- iTime;
@@ -218,7 +221,8 @@ void domination(){
       unsigned long xTime=millis(); //start disabling time
       while (isBlueButtonPressed()) {
         animatingBlue = true;
-        ledAnimations(animationStyle);
+        animationStyle = 2;
+        ledAnimations(animationStyle, 100);
         keypad.getKey();
         //check if game time runs out during the disabling
         aTime= millis()- iTime;
@@ -346,10 +350,10 @@ void gameOver(){
 }
 
 boolean isRedButtonPressed () {
-  return defusing;
+  return cancelando;
 }
 
 boolean isBlueButtonPressed () {
-  return cancelando;
+  return defusing;
 }
 
