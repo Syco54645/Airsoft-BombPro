@@ -1,6 +1,7 @@
 #include <Wire.h> 
 #include <Keypad.h>
 #include <LiquidCrystal_I2C.h>
+#include "tpic6b595.h"
 
 /*
  Arduino Bomb Pro
@@ -27,16 +28,16 @@ char keys[ROWS][COLS] = {
 };
 
 byte rowPins[ROWS] = {  // connect to the row pinouts of the keypad
-  A6,
-  A5,
-  A4,
-  A2,
+  A8,
+  A9,
+  A10,
+  A11,
 };
 byte colPins[COLS] = { // connect to the column pinouts of the keypad
-  A1,
-  A0,
-  A3,
-  A7,
+  A12,
+  A13,
+  A14,
+  A15,
 };
 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
@@ -64,9 +65,16 @@ char BT_DEFUSER = 'x';   // not implemented
 
 //leds
 
-const uint8_t REDLED = 11;
-const uint8_t GREENLED = 10;
+const uint8_t REDLED = 22;
+const uint8_t GREENLED = 23;
+const uint8_t BLUELED = 23;
 //const int BLUELED = 12;
+
+// led animation variables
+bool animatingRed = false;
+bool animatingBlue = false;
+uint8_t animationStyle = 1;
+
 //RELAYPIN
 boolean relayEnable = false;
 const uint8_t RELAYPIN = 9;
@@ -89,7 +97,7 @@ boolean defusing;
 boolean cancelando;
 // SOUND TONES
 boolean soundEnable = true;
-uint8_t tonepin = 8; // Pin 13 for the sound
+uint8_t tonepin = 9; // Pin 13 for the sound
 int alarmTone1 = 700;
 int alarmTone2 = 2600; // http://www.mainstreamds.com/wp-content/uploads/2014/08/bomb2.0_esquema.png
 int activeTone = 1330;
@@ -98,7 +106,8 @@ uint8_t errorTone = 100;
 unsigned long iTime;
 unsigned long timeCalcVar;
 unsigned long redTime;
-unsigned long greenTime;
+unsigned long blueTime;
+
 unsigned long iZoneTime;//initial time for zone
 byte team=0; // 0 = neutral, 1 = blue team, 2 = red team
 const byte TEAM_NEUTRAL = 0;
@@ -108,6 +117,8 @@ const byte TEAM_RED = 2;
 void setup () {
   lcd.begin(20, 4);
   Serial.begin(9600);
+  setupTPIC();
+
   startupSplash();
   keypad.setHoldTime(50);
   keypad.setDebounceTime(50);
@@ -223,4 +234,3 @@ void keypadEvent (KeypadEvent key) {
     break;
   }
 }
-

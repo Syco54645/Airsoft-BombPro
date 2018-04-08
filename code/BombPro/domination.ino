@@ -1,3 +1,31 @@
+void flashLedsForCapturedZone(unsigned long timeCalcVar) {
+  //Code for led blinking once zone is captured
+  if(timeCalcVar >= 0 && timeCalcVar <= 40) {
+    if (team == TEAM_BLUE) {
+      // digitalWrite(BLUELED, HIGH);
+      BLUE_BUTTON_LED_ON
+      BLUE_CHASE_LEDS_ON
+    }
+    if (team == TEAM_RED) {
+      // digitalWrite(REDLED, HIGH);
+      RED_BUTTON_LED_ON
+      RED_CHASE_LEDS_ON
+    }
+  }
+  if (timeCalcVar >= 50 && timeCalcVar <= 100) {
+    if (team == TEAM_BLUE) {
+      // digitalWrite(BLUELED, LOW);
+      BLUE_BUTTON_LED_OFF
+      BLUE_CHASE_LEDS_OFF
+    }
+    if (team == TEAM_RED) {
+      // digitalWrite(REDLED, LOW);
+      RED_BUTTON_LED_OFF
+      RED_CHASE_LEDS_OFF
+    }
+  }
+}
+
 void domination(){
 
   //SETUP INITIAL TIME 
@@ -11,11 +39,11 @@ void domination(){
   iZoneTime=0;
   aTime=0;
   redTime=0;
-  greenTime=0;
+  blueTime=0;
   endGame = false;
 
   int largoTono = 50;
-  // 0 = neutral, 1 = green team, 2 = red team
+  // 0 = neutral, 1 = blue team, 2 = red team
   a=millis();
   //Starting Game Code
   while(1)  // this is the important code, is a little messy but works good.
@@ -26,21 +54,10 @@ void domination(){
     
     keypad.getKey();
     aTime=millis()- iTime;
-    //Code for led blinking
     timeCalcVar=(millis()- iTime)%1000;
-    if(timeCalcVar >= 0 && timeCalcVar <= 40)
-    {
-      if(team==1)digitalWrite(GREENLED, HIGH);  
-      if(team==2)digitalWrite(REDLED, HIGH);  
-    }
-    if(timeCalcVar >= 50 && timeCalcVar <= 100)
-    {    
-      if(team==1)digitalWrite(GREENLED, LOW);  
-      if(team==2)digitalWrite(REDLED, LOW);
-    }
+    flashLedsForCapturedZone(timeCalcVar);
     // Sound!!! same as Destroy 
     if(timeCalcVar >= 0 && timeCalcVar <= 40 && soundEnable)tone(tonepin,activeTone,largoTono);
-
     if(timeCalcVar >= 245 && timeCalcVar <= 255 && minutos-aTime/60000<2 && soundEnable)tone(tonepin,activeTone,largoTono);
     if(timeCalcVar >= 495 && timeCalcVar <= 510 && minutos-aTime/60000<4 && soundEnable)tone(tonepin,activeTone,largoTono);
     if(timeCalcVar >= 745 && timeCalcVar <= 760 && minutos-aTime/60000<2 && soundEnable)tone(tonepin,activeTone,largoTono);
@@ -112,6 +129,8 @@ void domination(){
         {
           if(soundEnable)tone(tonepin,alarmTone2,200);
           digitalWrite(REDLED, LOW);
+          RED_BUTTON_LED_OFF
+          RED_CHASE_LEDS_OFF
         }
 
         unsigned long seconds= millis() - xTime;
@@ -122,12 +141,12 @@ void domination(){
         {
           delay(1000);
 
-          if(team==1){ 
-            greenTime+=millis()-iZoneTime;
+          if( team == TEAM_BLUE) {
+            blueTime+=millis()-iZoneTime;
             iZoneTime=0; 
 
           }
-          if(team==2){ 
+          if( team == TEAM_RED) {
             redTime+=millis()-iZoneTime;
             iZoneTime=0; 
           }
@@ -139,7 +158,10 @@ void domination(){
     }
 
     //Capturing red
-
+    animatingRed = false;
+    animatingBlue = false;
+    animationStyle = 0;
+    zeroAnimations();
     while (isRedButtonPressed() && team == TEAM_NEUTRAL) {
       cls();
       if (team == TEAM_NEUTRAL) {
@@ -149,6 +171,9 @@ void domination(){
       uint8_t percent = 0;
       unsigned long xTime = millis(); //start disabling time
       while (isRedButtonPressed()) {
+        animatingRed= true;
+        animationStyle = 2;
+        ledAnimations(animationStyle, 100);
         keypad.getKey();
         //check if game time runs out during the disabling
         aTime = millis()- iTime;
@@ -159,11 +184,14 @@ void domination(){
 
         if( timeCalcVar >= 0 && timeCalcVar <= 20) {
           digitalWrite(REDLED, HIGH);  
+          RED_BUTTON_LED_ON
+          // CAPTURING EFFECT
           if(soundEnable)tone(tonepin,alarmTone1,200);
         }
         if(timeCalcVar >= 480 && timeCalcVar <= 500) {
           if(soundEnable)tone(tonepin,alarmTone2,200);
           digitalWrite(REDLED, LOW);
+          RED_BUTTON_LED_OFF
         }
 
         unsigned long seconds= millis() - xTime;
@@ -171,7 +199,8 @@ void domination(){
         drawBar(percent);
 
         if(percent >= 100) {
-          digitalWrite(GREENLED, LOW);
+          digitalWrite(BLUELED, LOW);
+          BLUE_BUTTON_LED_OFF
           team=2;
           iZoneTime=millis();
           delay(1000);
@@ -180,6 +209,7 @@ void domination(){
       }
       cls();
       digitalWrite(REDLED, LOW);
+      RED_BUTTON_LED_OFF
     }
 
     //getting to blue zone
@@ -190,6 +220,9 @@ void domination(){
       uint8_t percent=0;
       unsigned long xTime=millis(); //start disabling time
       while (isBlueButtonPressed()) {
+        animatingBlue = true;
+        animationStyle = 2;
+        ledAnimations(animationStyle, 100);
         keypad.getKey();
         //check if game time runs out during the disabling
         aTime= millis()- iTime;
@@ -200,13 +233,15 @@ void domination(){
 
         if( timeCalcVar >= 0 && timeCalcVar <= 20)
         {
-          digitalWrite(GREENLED, HIGH);  
+          digitalWrite(BLUELED, HIGH);
+          BLUE_BUTTON_LED_ON
           if(soundEnable)tone(tonepin,alarmTone1,200);
         }
         if(timeCalcVar >= 480 && timeCalcVar <= 500)
         {
           if(soundEnable)tone(tonepin,alarmTone2,200);
-          digitalWrite(GREENLED, LOW);
+          digitalWrite(BLUELED, LOW);
+          BLUE_BUTTON_LED_OFF
         }
 
         unsigned long seconds= millis() - xTime;
@@ -215,7 +250,8 @@ void domination(){
 
         if(percent >= 100)
         {
-          digitalWrite(GREENLED, LOW);
+          digitalWrite(BLUELED, LOW);
+          BLUE_BUTTON_LED_OFF
           team=1;
           iZoneTime=millis();
           delay(1000);
@@ -223,17 +259,20 @@ void domination(){
         }
       }
       cls();
-      digitalWrite(GREENLED, LOW);  
+      digitalWrite(BLUELED, LOW);
+      BLUE_BUTTON_LED_OFF
     }
   }
 }
 
 void gameOver(){
 
-  if(team==1)greenTime+=millis()-iZoneTime;
+  if(team==1)blueTime+=millis()-iZoneTime;
   if(team==2)redTime+=millis()-iZoneTime;
-  digitalWrite(GREENLED, LOW);
+  digitalWrite(BLUELED, LOW);
+  BLUE_BUTTON_LED_OFF
   digitalWrite(REDLED, LOW);
+  RED_BUTTON_LED_OFF
   while(!defusing){
     keypad.getKey();
     if(defusing){
@@ -250,14 +289,16 @@ void gameOver(){
     lcd.setCursor(0, 1);
 
     //check who team win the base
-    if (greenTime > redTime ) {
-      // greenteam wins
+    if (blueTime > redTime ) {
+      // blueteam wins
       lcd.print(F("   BLUE TEAM WINS"));
-      digitalWrite(GREENLED, HIGH);
+      digitalWrite(BLUELED, HIGH);
+      BLUE_BUTTON_LED_ON
     } else {
       // redteam wins 
       lcd.print(F("   RED TEAM WINS"));
       digitalWrite(REDLED, HIGH);
+      RED_BUTTON_LED_ON
     }
     delay(3000);
     keypad.getKey();
@@ -277,7 +318,7 @@ void gameOver(){
     cls();
     lcd.print(F("     Blue Time:"));
     lcd.setCursor(7, 2);
-    printTimeDom(greenTime,false);
+    printTimeDom(blueTime,false);
     delay(3000);
     keypad.getKey();
     if(defusing){
@@ -309,10 +350,10 @@ void gameOver(){
 }
 
 boolean isRedButtonPressed () {
-  return defusing;
+  return cancelando;
 }
 
 boolean isBlueButtonPressed () {
-  return cancelando;
+  return defusing;
 }
 
